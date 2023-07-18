@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"mime/multipart"
 	"net/http"
 	"net/url"
@@ -14,6 +15,7 @@ import (
 	"time"
 
 	"github.com/google/go-querystring/query"
+	"github.com/rs/zerolog/log"
 	"golang.org/x/oauth2"
 )
 
@@ -176,6 +178,9 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 	req = req.WithContext(ctx)
 
 	resp, err := c.client.Do(req)
+	body, _ := ioutil.ReadAll(resp.Body)
+	log.Info().Msg(string(body))
+
 	if err != nil {
 		return resp, err
 	}
